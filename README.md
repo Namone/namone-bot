@@ -12,7 +12,7 @@ npm install
 npm run build
 
 # Run the bot
-npm start
+npm start _or_ npm run dev
 ```
 
 ## Contributing
