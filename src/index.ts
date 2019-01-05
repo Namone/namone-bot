@@ -2,20 +2,26 @@ import { Application } from 'probot' // eslint-disable-line no-unused-vars
 
 export = (app: Application) => {
   app.on('pull_request.opened', async (context) => {
-    const pattern = /\b[a-zA-Z]{3}\-{1}\d{3}\b/g;
-    const { number, title, user: { login }, head: { repo: { name }}, ...remaining } = context.payload.pull_request;
+    const pattern = /\b[a-zA-Z]{3}\-{1}\d{3}\b|\b\d{6}\b/g;
+    const { number, title, body, user: { login }, head: { repo: { name }}, ...remaining } = context.payload.pull_request;
 
     const isMatch = title.match(pattern);
     if (!isMatch)
-      return await app.log("Improper title task ID: " + title);
+      return await app.log("No task ID found. Supplied title data: " + title);
 
-    const body = "<a href='https://bluetent.atlassian.net/browse/" + isMatch[0].toUpperCase() + "'>This is the task.</a>";
+    let bodyOutput = "";
+    isMatch.forEach((taskId: String, index: Number) => {
+      const link = taskId.match(/\b[a-zA-Z]{3}\b/g) ? "https://bluetent.atlassian.net/browse/" : "https://system.na2.netsuite.com/app/accounting/project/projecttask.nl?id=";
+      const taskCount = isMatch.length > 1 ? " (" + index + "/" + isMatch.length + ")" : "";
+      bodyOutput += "<p><a href='" + link + taskId.toUpperCase() + "'>This commit relates to this task." + taskCount + "</a></p>";
+    });
+
     // Post a comment for the PR body
     await context.github.pullRequests.update({
       repo: name,
       owner: login,
       number: number,
-      body: body,
+      body: bodyOutput + body,
     });
   })
 }
