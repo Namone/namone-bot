@@ -1,6 +1,6 @@
 # namone-bot
 
-> A GitHub App built with [Probot](https://github.com/probot/probot) that An app to assist Namone.
+> A GitHub App built with [Probot](https://github.com/probot/probot) - it assists Namone.
 
 ## Setup
 
