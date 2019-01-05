@@ -4,9 +4,9 @@
   "description": "An app to assist Namone.",
   "author": "Alex Nordhausen <anorthhouse@gmail.com> (https://github.com/Namone/namone-bot)",
   "license": "ISC",
-  "repository": "https://github.com/namone-bot.git",
-  "homepage": "https://github.com/namone-bot",
-  "bugs": "https://github.com/namone-bot/issues",
+  "repository": "https://github.com/Namone/namone-bot.git",
+  "homepage": "https://github.com/Namone/namone-bot",
+  "bugs": "https://github.com/Namone/namone-bot/issues",
   "keywords": [
     "probot",
     "github",
