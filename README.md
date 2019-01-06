@@ -2,7 +2,7 @@
 
 > A GitHub App built with [Probot](https://github.com/probot/probot) - it assists Namone.
 
-## Setup
+## Setup/Details
 
 ```sh
 # Install dependencies

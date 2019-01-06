@@ -10,10 +10,11 @@ export = (app: Application) => {
       return await app.log("No task ID found. Supplied title data: " + title);
 
     let bodyOutput = "";
-    isMatch.forEach((taskId: String, index: Number) => {
+    isMatch.forEach((taskId: String, index: any) => {
       const link = taskId.match(/\b[a-zA-Z]{3}\b/g) ? "https://bluetent.atlassian.net/browse/" : "https://system.na2.netsuite.com/app/accounting/project/projecttask.nl?id=";
-      const taskCount = isMatch.length > 1 ? " (" + index + "/" + isMatch.length + ")" : "";
-      bodyOutput += "<p><a href='" + link + taskId.toUpperCase() + "'>This commit relates to this task." + taskCount + "</a></p>";
+      let displayIndex = index + 1;
+      const taskCount = isMatch.length > 1 ? " (" + displayIndex + "/" + isMatch.length + ")" : "";
+      bodyOutput += "<p><a href='" + link + taskId.toUpperCase() + "'>This pull request relates to this task." + taskCount + "</a></p><br />";
     });
 
     // Post a comment for the PR body
