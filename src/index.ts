@@ -15,10 +15,14 @@ export = (app: Application) => {
       let displayIndex = index + 1;
       const taskCount = isMatch.length > 1 ? " (" + displayIndex + "/" + isMatch.length + ")" : "";
       bodyOutput += "[This pull request relates to this task." + taskCount + "](" + link + taskId.toUpperCase() + ")";
+
+      if (taskCount.length > 0 && displayIndex < isMatch.length) {
+        bodyOutput += "\n \n";
+      }
     });
 
     if (body.length > 0) {
-      bodyOutput += "\n \n \n \n";
+      bodyOutput += "\n \n";
     }
 
     // Post a comment for the PR body
