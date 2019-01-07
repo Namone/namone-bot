@@ -18,7 +18,7 @@ export = (app: Application) => {
     });
 
     if (body.length > 0) {
-      bodyOutput += "&nbsp;&nbsp;&nbsp;&nbsp;";
+      bodyOutput += "\n \n \n \n";
     }
 
     // Post a comment for the PR body
