@@ -2,7 +2,7 @@
 
 > A GitHub App built with [Probot](https://github.com/probot/probot) - it automatically links tasks based upon pull-request title/label.
 
-## Setup/Details
+## Setup
 
 ```sh
 # Install dependencies
@@ -13,6 +13,9 @@ npm run build
 
 # Run the bot
 npm start or npm run dev
+
+# Run typescript and then the bot (dev)
+npm run app
 ```
 
 ## Contributing
