@@ -17,6 +17,10 @@ export = (app: Application) => {
       bodyOutput += "[This pull request relates to this task." + taskCount + "](" + link + taskId.toUpperCase() + ")";
     });
 
+    if (body.length > 0) {
+      body.bodyOutput += "\s\s\s\s";
+    }
+
     // Post a comment for the PR body
     await context.github.pullRequests.update({
       repo: name,
