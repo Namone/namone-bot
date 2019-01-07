@@ -18,7 +18,7 @@ export = (app: Application) => {
     });
 
     if (body.length > 0) {
-      bodyOutput += "\s\s\s\s";
+      bodyOutput += "&nbsp;&nbsp;&nbsp;&nbsp;";
     }
 
     // Post a comment for the PR body
