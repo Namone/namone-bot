@@ -14,7 +14,7 @@ export = (app: Application) => {
       const link = taskId.match(/\b[a-zA-Z]{3}\b/g) ? "https://bluetent.atlassian.net/browse/" : "https://system.na2.netsuite.com/app/accounting/project/projecttask.nl?id=";
       let displayIndex = index + 1;
       const taskCount = isMatch.length > 1 ? " (" + displayIndex + "/" + isMatch.length + ")" : "";
-      bodyOutput += "<p><a href='" + link + taskId.toUpperCase() + "'>This pull request relates to this task." + taskCount + "</a></p><br />";
+      bodyOutput += "[This pull request relates to this task." + taskCount + "](" + link + taskId.toUpperCase() + ")";
     });
 
     // Post a comment for the PR body
