@@ -3,7 +3,7 @@ import { Application } from 'probot' // eslint-disable-line no-unused-vars
 export = (app: Application) => {
   app.on('pull_request.opened', async (context) => {
     const pattern = /\b[a-zA-Z]{3}\-{1}\d{3}\b|\b\d{6}\b/g;
-    const { number, title, body, user: { login }, head: { repo: { name }}, ...remaining } = context.payload.pull_request;
+    const { number, title, body, head: { repo: { name, owner: { login }}}, ...remaining } = context.payload.pull_request;
 
     const isMatch = title.match(pattern);
     if (!isMatch)
