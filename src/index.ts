@@ -9,7 +9,7 @@ export = (app: Application) => {
   app.on('pull_request.opened', async (context) => {
     const pattern = /\b[a-zA-Z]{3}\-{1}\d{3}\b|\b\d{6}\b/g;
     const { number, title, body, head: { repo: { name }}, base: { user: { login }}, ...remaining } = context.payload.pull_request;
-
+    app.log(number);
     const isMatch = title.match(pattern);
     if (!isMatch)
       return await app.log("No task ID found. Supplied title data: " + title);
@@ -41,7 +41,8 @@ export = (app: Application) => {
 
   app.on('pull_request.closed', async (context) => {
     const { number, merged, head: {label, user: {login }}, ...remaining } = context.payload;
-
+    // `res` contains information about the posted message
+    app.log(merged);
     if(!merged) {
       return;
     }
@@ -69,7 +70,7 @@ export = (app: Application) => {
       });
 
       // `res` contains information about the posted message
-      console.log(res);
+      app.log(res);
     })();
   });
 
