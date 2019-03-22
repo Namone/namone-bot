@@ -4,6 +4,7 @@ const { WebClient } = require('@slack/client');
 const token = process.env.SLACK_TOKEN;
 const web = new WebClient(token);
 const appId = process.env.SLACK_APP_ID;
+const channelId = process.env.SLACK_CHOICE_DEV_ID;
 
 export = (app: Application) => {
   app.on('pull_request.opened', async (context) => {
@@ -41,7 +42,7 @@ export = (app: Application) => {
 
   app.on('pull_request.closed', async (context) => {
     app.log(context.payload);
-    
+
     const { number, title, merged, head: {label, user: {login} }, ...remaining } = context.payload.pull_request;
     // `res` contains information about the posted message
 
@@ -52,7 +53,7 @@ export = (app: Application) => {
     (async () => {
       // See: https://api.slack.com/methods/chat.postMessage
       const res = await web.chat.postMessage({ 
-        channel: appId, 
+        channel: channelId, 
         blocks: [
           {
             type: "section",
