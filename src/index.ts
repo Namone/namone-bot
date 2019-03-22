@@ -9,7 +9,7 @@ export = (app: Application) => {
   app.on('pull_request.opened', async (context) => {
     const pattern = /\b[a-zA-Z]{3}\-{1}\d{3}\b|\b\d{6}\b/g;
     const { number, title, body, head: { repo: { name }}, base: { user: { login }}, ...remaining } = context.payload.pull_request;
-
+    console.log(number);
     const isMatch = title.match(pattern);
     if (!isMatch)
       return await app.log("No task ID found. Supplied title data: " + title);
