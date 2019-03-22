@@ -1,4 +1,9 @@
-import { Application } from 'probot' // eslint-disable-line no-unused-vars
+import { Application } from 'probot'; // eslint-disable-line no-unused-vars
+const { WebClient } = require('@slack/client');
+
+const token = process.env.SLACK_TOKEN;
+const web = new WebClient(token);
+const appId = process.env.SLACK_APP_ID;
 
 export = (app: Application) => {
   app.on('pull_request.opened', async (context) => {
@@ -32,5 +37,77 @@ export = (app: Application) => {
       number: number,
       body: bodyOutput + body,
     });
-  })
+  });
+
+  app.on('pull_request.closed', async (context) => {
+    const { number, merged, head: {label, user: {login }}, ...remaining } = context.payload;
+
+    if(!merged) {
+      return;
+    }
+
+    (async () => {
+      // See: https://api.slack.com/methods/chat.postMessage
+      const res = await web.chat.postMessage({ 
+        channel: appId, 
+        blocks: [
+          {
+            type: "section",
+            text: {
+              type: "mrkdwn",
+              text:  label + ' (' + number  + ')',
+            }
+          },
+          {
+            type: "section",
+            text: {
+              type: "mrkdwn",
+              text:  'Merged by: ' + login,
+            }
+          },
+        ]
+      });
+
+      // `res` contains information about the posted message
+      console.log(res);
+    })();
+  });
+
+  app.on('deployment_status', async (context) => {
+    const { deployment: { ref }, deployment_status: { state, creator: { login } } } = context.payload;
+
+    const trackedBranches = [
+      'master',
+    ];
+    
+    if(!trackedBranches.includes(ref)) {
+      return;
+    }
+
+    (async () => {
+      // See: https://api.slack.com/methods/chat.postMessage
+      const res = await web.chat.postMessage({ 
+        channel: appId, 
+        blocks: [
+          {
+            type: "section",
+            text: {
+              type: "mrkdwn",
+              text: "Deployment to `" + ref + "` completed with status: " + state,
+            }
+          },
+          {
+            type: "section",
+            text: {
+              type: "mrkdwn",
+              text:  'Merged by: ' + login,
+            }
+          },
+        ]
+      });
+
+      // `res` contains information about the posted message
+      console.log(res);
+    })();
+  });
 }
