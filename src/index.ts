@@ -41,7 +41,8 @@ export = (app: Application) => {
 
   app.on('pull_request.closed', async (context) => {
     const { number, merged, head: {label, user: {login }}, ...remaining } = context.payload;
-
+    // `res` contains information about the posted message
+    console.log(context.payload);
     if(!merged) {
       return;
     }
