@@ -40,10 +40,10 @@ export = (app: Application) => {
   });
 
   app.on('pull_request.closed', async (context) => {
-    const { number, merged, head: {label, user: {login }}, ...remaining } = context.payload;
+    app.log(context.payload);
+    const { number, title, merged, head: {label, user: {login} }, ...remaining } = context.payload.pull_request;
     // `res` contains information about the posted message
-    
-    app.log(merged);
+
     if(!merged) {
       return;
     }
@@ -57,7 +57,7 @@ export = (app: Application) => {
             type: "section",
             text: {
               type: "mrkdwn",
-              text:  label + ' (' + number  + ')',
+              text:  title + ' - (' + label + "/" + number  + ')',
             }
           },
           {
