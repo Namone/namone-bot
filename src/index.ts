@@ -100,7 +100,7 @@ export = (app: Application) => {
               "fields": [
                   {
                       "title": "Merged",
-                      "value": "FALSE",
+                      "value": "TRUE",
                       "short": false
                   }
               ],
