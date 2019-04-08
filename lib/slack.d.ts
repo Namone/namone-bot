@@ -1,1 +1,1 @@
-export declare const postMessage: (data: {}) => void;
+export declare const postMessage: (message: {}) => void;

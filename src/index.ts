@@ -35,27 +35,125 @@ export = (app: Application) => {
     });
   });
 
-  app.on('pull_request.opened', async (context) => {
-    const { number, title, body, head: { repo: { name }}, base: { user: { login }}, ...remaining } = context.payload.pull_request;
+  // app.on('pull_request.opened', async (context) => {
+  //   const { number, url, title, body, head: { repo: { name }}, base: { user: { login }}, ...remaining } = context.payload.pull_request;
 
-
-  });
+  // });
 
   app.on('pull_request.ready_for_review', async (context) => {
-    // @TODO: add slack message to alert users a review is needed...
+    const { number, html_url, title, body, head: { repo: { name }}, base: { user: { login }}, ...remaining } = context.payload.pull_request;
+    
+    const message = {
+      "attachments": [
+          {
+              "fallback": "TaskBot: Review Pull Request",
+              "color": "good",
+              "author_name": login,
+              "title": "Review Pull Request (" + name + ")",
+              "title_link": html_url,
+              "text": "Pull request #" + number + " is ready to be reviewed.",
+              "fields": [
+                  {
+                      "title": "Priority",
+                      "value": "High",
+                      "short": false
+                  }
+              ],
+              "footer": "TaskBot",
+          }
+        ]
+      };
+
+    SlackAPI.postMessage(message);
   });
 
   app.on('pull_request.closed', async (context) => {
 
-    const { number, title, merged, head: {label, user: {login} }, ...remaining } = context.payload.pull_request;
-    // `res` contains information about the posted message
-
-    SlackAPI.postMessage({});
-    
+    const { number, html_url, title, merged, body, head: {label, user: {login} }, ...remaining } = context.payload.pull_request;
+    let message = {};
     if(!merged) {
-      return;
+      message = {
+      "attachments": [
+          {
+              "fallback": "TaskBot: Closed Pull Request",
+              "color": "warning",
+              "author_name": login,
+              "title": "PR #" + number + " Closed",
+              "title_link": html_url,
+              "text": "*" + title + " (" + number + ")* \nMerged: FALSE \n>>>" + body,
+              "fields": [
+                  {
+                      "title": "Priority",
+                      "value": "High",
+                      "short": false
+                  }
+              ],
+              "footer": "TaskBot",
+          }
+        ]
+      };
     }
+    else {
+      message = {
+      "attachments": [
+          {
+              "fallback": "TaskBot: Closed Pull Request",
+              "color": "good",
+              "author_name": login,
+              "title": "PR #" + number + " Closed",
+              "title_link": html_url,
+              "text": "*" + title + " (" + number + ")* \nMerged: TRUE \n>>>" + body,
+              "fields": [
+                  {
+                      "title": "Priority",
+                      "value": "High",
+                      "short": false
+                  }
+              ],
+              "footer": "TaskBot",
+          }
+        ]
+      };
+    }
+    
+    SlackAPI.postMessage(message);  
   });
 
+  app.on('deployment_status', async (context) => {
+    const { deployment: { ref, url, environment }, deployment_status: { state, creator: { login } } } = context.payload;
+
+    const trackedBranches = [
+      'master',
+    ];
+    
+    if(!trackedBranches.includes(ref)) {
+      return;
+    }
+
+    const message = {
+      "attachments": [
+          {
+              "fallback": "TaskBot: Deployment Completed",
+              "color": "#42525A",
+              "author_name": login,
+              "title": ref + " (" + environment + ")",
+              "title_link": url,
+              "text": "Deployment (started by " + login + ") has completed with status: *" + state + "*",
+              "fields": [
+                  {
+                      "title": "Priority",
+                      "value": "High",
+                      "short": false
+                  }
+              ],
+              "footer": "TaskBot",
+          }
+        ]
+      };
+
+    SlackAPI.postMessage(message);
+  });
   
 }
+
+
