@@ -68,9 +68,9 @@ export = (app: Application) => {
   });
 
   app.on('pull_request.closed', async (context) => {
-
-    const { number, html_url, title, merged, body, head: {label, user: {login} }, ...remaining } = context.payload.pull_request;
+    const { number, html_url, title, merged, body, head: { repo: {name}, label, user: {login} }, ...remaining } = context.payload.pull_request;
     let message = {};
+
     if(!merged) {
       message = {
       "attachments": [
@@ -116,7 +116,7 @@ export = (app: Application) => {
       };
     }
     
-    SlackAPI.postMessage(message);  
+    SlackAPI.postMessage(message);
   });
 
   app.on('deployment_status', async (context) => {
