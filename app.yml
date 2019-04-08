@@ -19,7 +19,7 @@ default_events:
 - create
 # - delete
 # - deployment
-# - deployment_status
+- deployment_status
 # - fork
 # - gollum
 - issue_comment

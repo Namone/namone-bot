@@ -1,4 +1,4 @@
-# LinkerBot
+# TaskBot
 
 > A GitHub App built with [Probot](https://github.com/probot/probot) - it automatically links tasks based upon pull-request title/label.
 

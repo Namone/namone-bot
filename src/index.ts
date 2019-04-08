@@ -1,16 +1,11 @@
 import { Application } from 'probot'; // eslint-disable-line no-unused-vars
-const { WebClient } = require('@slack/client');
-
-const token = process.env.SLACK_TOKEN;
-const web = new WebClient(token);
-const appId = process.env.SLACK_APP_ID;
-const channelId = process.env.SLACK_CHOICE_DEV_ID;
+import * as SlackAPI from './slack';
 
 export = (app: Application) => {
   app.on('pull_request.opened', async (context) => {
     const pattern = /\b[a-zA-Z]{3}\-{1}\d{3}\b|\b\d{6}\b/g;
     const { number, title, body, head: { repo: { name }}, base: { user: { login }}, ...remaining } = context.payload.pull_request;
-    app.log(number);
+    
     const isMatch = title.match(pattern);
     if (!isMatch)
       return await app.log("No task ID found. Supplied title data: " + title);
@@ -40,45 +35,92 @@ export = (app: Application) => {
     });
   });
 
-  app.on('pull_request.closed', async (context) => {
-    app.log(context.payload);
+  // app.on('pull_request.opened', async (context) => {
+  //   const { number, url, title, body, head: { repo: { name }}, base: { user: { login }}, ...remaining } = context.payload.pull_request;
 
-    const { number, title, merged, head: {label, user: {login} }, ...remaining } = context.payload.pull_request;
-    // `res` contains information about the posted message
+  // });
 
-    if(!merged) {
-      return;
-    }
-
-    (async () => {
-      // See: https://api.slack.com/methods/chat.postMessage
-      const res = await web.chat.postMessage({ 
-        channel: channelId, 
-        blocks: [
+  app.on('pull_request.ready_for_review', async (context) => {
+    const { number, html_url, title, body, head: { repo: { name }}, base: { user: { login }}, ...remaining } = context.payload.pull_request;
+    
+    const message = {
+      "attachments": [
           {
-            type: "section",
-            text: {
-              type: "mrkdwn",
-              text:  title + ' - (' + label + "/" + number  + ')',
-            }
-          },
-          {
-            type: "section",
-            text: {
-              type: "mrkdwn",
-              text:  'Merged by: ' + login,
-            }
-          },
+              "fallback": "TaskBot: Review Pull Request",
+              "color": "good",
+              "author_name": login,
+              "title": "Review Pull Request (" + name + ")",
+              "title_link": html_url,
+              "text": "Pull request #" + number + " is ready to be reviewed.",
+              "fields": [
+                  {
+                      "title": "Priority",
+                      "value": "High",
+                      "short": false
+                  }
+              ],
+              "footer": "TaskBot",
+          }
         ]
-      });
+      };
 
-      // `res` contains information about the posted message
-      app.log(res);
-    })();
+    SlackAPI.postMessage(message);
+  });
+
+  app.on('pull_request.closed', async (context) => {
+
+    const { number, html_url, title, merged, body, head: {label, user: {login} }, ...remaining } = context.payload.pull_request;
+    let message = {};
+    if(!merged) {
+      message = {
+      "attachments": [
+          {
+              "fallback": "TaskBot: Closed Pull Request",
+              "color": "warning",
+              "author_name": login,
+              "title": "PR #" + number + " Closed",
+              "title_link": html_url,
+              "text": "*" + title + " (" + number + ")* \nMerged: _FALSE_ \n>>>" + body,
+              "fields": [
+                  {
+                      "title": "Priority",
+                      "value": "High",
+                      "short": false
+                  }
+              ],
+              "footer": "TaskBot",
+          }
+        ]
+      };
+    }
+    else {
+      message = {
+      "attachments": [
+          {
+              "fallback": "TaskBot: Closed Pull Request",
+              "color": "good",
+              "author_name": login,
+              "title": "PR #" + number + " Closed",
+              "title_link": html_url,
+              "text": "*" + title + " (" + number + ")* \nMerged: _TRUE_ \n>>>" + body,
+              "fields": [
+                  {
+                      "title": "Priority",
+                      "value": "High",
+                      "short": false
+                  }
+              ],
+              "footer": "TaskBot",
+          }
+        ]
+      };
+    }
+    
+    SlackAPI.postMessage(message);  
   });
 
   app.on('deployment_status', async (context) => {
-    const { deployment: { ref }, deployment_status: { state, creator: { login } } } = context.payload;
+    const { deployment: { ref, url, environment }, deployment_status: { state, creator: { login } } } = context.payload;
 
     const trackedBranches = [
       'master',
@@ -88,30 +130,30 @@ export = (app: Application) => {
       return;
     }
 
-    (async () => {
-      // See: https://api.slack.com/methods/chat.postMessage
-      const res = await web.chat.postMessage({ 
-        channel: appId, 
-        blocks: [
+    const message = {
+      "attachments": [
           {
-            type: "section",
-            text: {
-              type: "mrkdwn",
-              text: "Deployment to `" + ref + "` completed with status: " + state,
-            }
-          },
-          {
-            type: "section",
-            text: {
-              type: "mrkdwn",
-              text:  'Merged by: ' + login,
-            }
-          },
+              "fallback": "TaskBot: Deployment Completed",
+              "color": "#42525A",
+              "author_name": login,
+              "title": ref + " (" + environment + ")",
+              "title_link": url,
+              "text": "Deployment (started by " + login + ") has completed with status: *" + state + "*",
+              "fields": [
+                  {
+                      "title": "Priority",
+                      "value": "High",
+                      "short": false
+                  }
+              ],
+              "footer": "TaskBot",
+          }
         ]
-      });
+      };
 
-      // `res` contains information about the posted message
-      console.log(res);
-    })();
+    SlackAPI.postMessage(message);
   });
+  
 }
+
+
