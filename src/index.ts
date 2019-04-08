@@ -52,13 +52,7 @@ export = (app: Application) => {
               "title": "Review Pull Request (" + name + ")",
               "title_link": html_url,
               "text": "Pull request #" + number + " is ready to be reviewed.",
-              "fields": [
-                  {
-                      "title": "Priority",
-                      "value": "High",
-                      "short": false
-                  }
-              ],
+              "fields": [],
               "footer": "TaskBot",
           }
         ]
@@ -80,11 +74,11 @@ export = (app: Application) => {
               "author_name": login,
               "title": "PR #" + number + " Closed",
               "title_link": html_url,
-              "text": "*" + title + " (" + number + ")* \nMerged: _FALSE_ \n>>>" + body,
+              "text": "*" + title + " (" + number + ")* \n>>>" + body,
               "fields": [
                   {
-                      "title": "Priority",
-                      "value": "High",
+                      "title": "Merged",
+                      "value": "FALSE",
                       "short": false
                   }
               ],
@@ -102,11 +96,11 @@ export = (app: Application) => {
               "author_name": login,
               "title": "PR #" + number + " Closed",
               "title_link": html_url,
-              "text": "*" + title + " (" + number + ")* \nMerged: _TRUE_ \n>>>" + body,
+              "text": "*" + title + " (" + number + ")* \n>>>" + body,
               "fields": [
                   {
-                      "title": "Priority",
-                      "value": "High",
+                      "title": "Merged",
+                      "value": "FALSE",
                       "short": false
                   }
               ],
@@ -138,11 +132,11 @@ export = (app: Application) => {
               "author_name": login,
               "title": ref + " (" + environment + ")",
               "title_link": url,
-              "text": "Deployment (started by " + login + ") has completed with status: *" + state + "*",
+              "text": "Deployment (started by " + login + ") has completed.",
               "fields": [
                   {
-                      "title": "Priority",
-                      "value": "High",
+                      "title": "Deployment Status",
+                      "value": state,
                       "short": false
                   }
               ],

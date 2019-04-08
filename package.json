@@ -1,12 +1,12 @@
 {
   "name": "LinkerBot",
-  "version": "1.5.0",
-  "description": "An app to assist with commit message task linking.",
-  "author": "Alex Nordhausen <anorthhouse@gmail.com> (https://github.com/Namone/namone-bot)",
+  "version": "1.6.0",
+  "description": "An app to assist with commit message task linking and notifications.",
+  "author": "Alex Nordhausen <anorthhouse@gmail.com> (https://github.com/Namone/task-bot)",
   "license": "ISC",
-  "repository": "https://github.com/Namone/namone-bot.git",
-  "homepage": "https://github.com/Namone/namone-bot",
-  "bugs": "https://github.com/Namone/namone-bot/issues",
+  "repository": "https://github.com/Namone/task-bot.git",
+  "homepage": "https://github.com/Namone/task-bot",
+  "bugs": "https://github.com/Namone/task-bot/issues",
   "keywords": [
     "probot",
     "github",
