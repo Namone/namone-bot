@@ -68,9 +68,9 @@ export = (app: Application) => {
   });
 
   app.on('pull_request.closed', async (context) => {
-
-    const { number, html_url, title, merged, body, head: {label, user: {login} }, ...remaining } = context.payload.pull_request;
+    const { number, html_url, title, merged, body, head: { repo: {name}, label, user: {login} }, ...remaining } = context.payload.pull_request;
     let message = {};
+
     if(!merged) {
       message = {
       "attachments": [
@@ -117,6 +117,16 @@ export = (app: Application) => {
     }
     
     SlackAPI.postMessage(message);  
+
+    if(merged) {
+      // If merged, close the branch.
+      await context.github.pullRequests.update({
+        repo: name,
+        owner: login,
+        number: number,
+        state: 'closed',
+      });
+    }
   });
 
   app.on('deployment_status', async (context) => {
