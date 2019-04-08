@@ -116,17 +116,7 @@ export = (app: Application) => {
       };
     }
     
-    SlackAPI.postMessage(message);  
-
-    if(merged) {
-      // If merged, close the branch.
-      await context.github.pullRequests.update({
-        repo: name,
-        owner: login,
-        number: number,
-        state: 'closed',
-      });
-    }
+    SlackAPI.postMessage(message);
   });
 
   app.on('deployment_status', async (context) => {
