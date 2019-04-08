@@ -80,7 +80,7 @@ export = (app: Application) => {
               "author_name": login,
               "title": "PR #" + number + " Closed",
               "title_link": html_url,
-              "text": "*" + title + " (" + number + ")* \nMerged: FALSE \n>>>" + body,
+              "text": "*" + title + " (" + number + ")* \nMerged: _FALSE_ \n>>>" + body,
               "fields": [
                   {
                       "title": "Priority",
@@ -102,7 +102,7 @@ export = (app: Application) => {
               "author_name": login,
               "title": "PR #" + number + " Closed",
               "title_link": html_url,
-              "text": "*" + title + " (" + number + ")* \nMerged: TRUE \n>>>" + body,
+              "text": "*" + title + " (" + number + ")* \nMerged: _TRUE_ \n>>>" + body,
               "fields": [
                   {
                       "title": "Priority",
