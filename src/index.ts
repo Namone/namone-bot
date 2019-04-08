@@ -74,7 +74,7 @@ export = (app: Application) => {
               "author_name": login,
               "title": "PR #" + number + " Closed",
               "title_link": html_url,
-              "text": "*" + title + " (" + number + ")* >>>" + body,
+              "text": "*" + title + " (" + number + ")* \n>>>" + body,
               "fields": [
                   {
                       "title": "Merged",
@@ -96,7 +96,7 @@ export = (app: Application) => {
               "author_name": login,
               "title": "PR #" + number + " Closed",
               "title_link": html_url,
-              "text": "*" + title + " (" + number + ")* >>>" + body,
+              "text": "*" + title + " (" + number + ")* \n>>>" + body,
               "fields": [
                   {
                       "title": "Merged",
