@@ -40,6 +40,7 @@ export = (app: Application) => {
 
   // });
 
+  // When PR Draft is ready for review
   app.on('pull_request.ready_for_review', async (context) => {
     const { number, html_url, title, body, head: { repo: { name }}, base: { user: { login }}, ...remaining } = context.payload.pull_request;
     
@@ -60,6 +61,29 @@ export = (app: Application) => {
 
     SlackAPI.postMessage(message);
   });
+
+  // When review is edited, deleted, or submitted on a PR
+  // app.on('pull_request_review', async (context) => {
+  //   // const { user: { login } } = context.payload.review;
+  //   const { number, html_url, title, body, head: { repo: { name }}, base: { user: { login }}, ...remaining } = context.payload.pull_request;
+    
+  //   const message = {
+  //     "attachments": [
+  //         {
+  //             "fallback": "TaskBot: Review Pull Request",
+  //             "color": "good",
+  //             "author_name": login,
+  //             "title": "Review Pull Request (" + name + ")",
+  //             "title_link": html_url,
+  //             "text": "Pull request #" + number + " is ready to be reviewed.",
+  //             "fields": [],
+  //             "footer": "TaskBot",
+  //         }
+  //       ]
+  //     };
+
+  //   SlackAPI.postMessage(message);
+  // });
 
   app.on('pull_request.closed', async (context) => {
     const { number, html_url, title, merged, body, head: { repo: {name}, label, user: {login} }, ...remaining } = context.payload.pull_request;
@@ -91,7 +115,7 @@ export = (app: Application) => {
       message = {
       "attachments": [
           {
-              "fallback": "TaskBot: Closed Pull Request",
+              "fallback": "TaskBot: Merged Pull Request",
               "color": "good",
               "author_name": login,
               "title": "PR #" + number + " Closed",
