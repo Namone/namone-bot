@@ -1,16 +1,15 @@
 import { Application } from 'probot'; // eslint-disable-line no-unused-vars
 import * as SlackAPI from './slack';
-const { Octokit } = require('@octokit/rest');
+const Octokit = require('@octokit/rest');
 
 const octokit = Octokit({
-    auth: process.env.WEBHOOK_SECRET,
+    auth: process.env.GITHUB_TOKEN,
     userAgent: 'TaskBot 1.6.0',
-    baseUrl: 'https://api.github.com'
 });
 
 export = (app: Application) => {
   app.on('pull_request.opened', async (context) => {
-    const pattern = /\b[a-zA-Z]{3}\-{1}\d{3}\b|\b\d{6}\b/g;
+    const pattern = /\b[a-zA-Z]{3}\-{1}\d{1,}\b|\b\d{6}\b/g;
     const { number, title, body, head: { repo: { name }}, base: { user: { login }}, ...remaining } = context.payload.pull_request;
 
     const isMatch = title.match(pattern);
@@ -37,7 +36,7 @@ export = (app: Application) => {
     await octokit.pulls.update({
       repo: name,
       owner: login,
-      number: number,
+      pull_number: number,
       body: bodyOutput + body
     });
   });
