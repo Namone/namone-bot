@@ -9,7 +9,7 @@ const groupId = process.env.SLACK_GROUP_ID;
 export const postMessage = (message: {}) => {
   (async () => {
     // See: https://api.slack.com/methods/chat.postMessage
-    const res = await web.chat.postMessage({ channel: '#choice-dev', ...message });
+    const res = await web.chat.postMessage({ channel: '#git-logs', ...message });
 
     // `res` contains information about the posted message
     console.log('Message sent: ', res.ts);
