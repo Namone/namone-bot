@@ -22,20 +22,21 @@
     "test:watch": "jest --watch --notify --notifyMode=change --coverage"
   },
   "dependencies": {
+    "@octokit/rest": "github:octokit/rest.js",
     "@slack/client": "^4.12.0",
-    "@types/nock": "^9.3.0",
+    "@types/nock": "^9.3.1",
     "nock": "^10.0.0",
-    "probot": "^7.2.0",
+    "probot": "^7.5.3",
     "request": "^2.88.0",
-    "request-promise-native": "^1.0.5"
+    "request-promise-native": "^1.0.7"
   },
   "devDependencies": {
-    "@types/jest": "^23.1.5",
-    "@types/node": "^10.5.2",
+    "@types/jest": "^23.3.14",
+    "@types/node": "^10.14.15",
     "eslint-plugin-typescript": "^0.12.0",
     "jest": "^23.4.0",
-    "nodemon": "^1.17.2",
-    "smee-client": "^1.0.2",
+    "nodemon": "^1.19.1",
+    "smee-client": "^1.1.0",
     "standard": "^10.0.3",
     "ts-jest": "^23.0.0",
     "typescript": "^2.9.2",
