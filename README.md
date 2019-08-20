@@ -6,7 +6,7 @@
 
 ```sh
 # Install dependencies
-npm install
+npm install --dev
 
 # Run typescript
 npm run build
